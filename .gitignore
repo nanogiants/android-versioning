@@ -1,0 +1,9 @@
+*~
+.DS_Store
+*.iml
+.idea
+templates
+build
+scripts
+public
+repo

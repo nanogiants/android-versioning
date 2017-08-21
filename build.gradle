@@ -1,4 +1,4 @@
-group 'eu.appcom'
+group 'eu.appcom.gradle'
 version '1.0'
 
 apply plugin: 'groovy'
@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.10'
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     compile gradleApi()
@@ -24,7 +24,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             // TODO: Push to real repository
-            repository(url: uri('repo'))
+            repository(url: uri('/Users/simonvandeloo/Git/gradle-repo'))
         }
     }
 }

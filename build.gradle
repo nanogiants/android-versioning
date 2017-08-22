@@ -1,5 +1,5 @@
 group 'eu.appcom.gradle'
-version '1.0'
+version gitTag()
 
 apply plugin: 'groovy'
 apply plugin: 'java'
@@ -26,5 +26,15 @@ uploadArchives {
             // TODO: Push to real repository
             repository(url: uri('/Users/simonvandeloo/Git/gradle-repo'))
         }
+    }
+}
+
+def gitTag() {
+    def revlist = 'git rev-list --tags --max-count=1'.execute([], project.rootDir).text.trim()
+    def versionName = ('git describe --tags ' + revlist.toString()).execute([], project.rootDir).text.trim()
+    if (versionName != null) {
+        return versionName
+    } else {
+        return "NO_VERSION"
     }
 }

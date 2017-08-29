@@ -64,10 +64,10 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/appcom-interactive/android-versioning.git'
         version {
-            name = '0.0.0'
+            name = super.gitTag()
             desc = 'Description'
             vcsTag = gitTag()
-            attributes = ['gradle-plugin': 'eu.appcom:eu.appcom.gradle:android-versioning']
+            attributes = ['gradle-plugin': 'eu.appcom.gradle:android-versioning']
         }
     }
 }
@@ -92,6 +92,7 @@ def gitTag() {
     def revlist = 'git rev-list --tags --max-count=1'.execute([], project.rootDir).text.trim()
     def versionName = ('git describe --tags ' + revlist.toString()).execute([], project.rootDir).text.trim()
     if (versionName != null) {
+        println "Version: " + versionName
         return versionName
     } else {
         return "NO_VERSION"

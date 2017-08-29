@@ -8,8 +8,14 @@ plugins {
     id "com.jfrog.bintray" version "1.7"
 }
 
-group 'eu.appcom.gradle'
-version gitTag()
+def projectName = "android-versioning"
+def projectGroup = 'eu.appcom.gradle'
+def projectVersion = gitTag()
+def projectURL = "https://github.com/appcom-interactive/android-versioning"
+def projectGit = "https://github.com/appcom-interactive/android-versioning.git"
+
+group projectGroup
+version projectVersion
 
 allprojects {
     repositories {
@@ -30,11 +36,11 @@ install {
     repositories.mavenInstaller {
         pom.project {
             packaging 'jar'
-            groupId 'eu.appcom.gradle'
-            artifactId 'android-versioning'
-            version super.gitTag()
-            name 'android-versioning' // pom.project.name must be same as bintray.pkg.name
-            url 'https://github.com/appcom-interactive/android-versioning'
+            groupId projectGroup
+            artifactId projectName
+            version projectVersion
+            name projectName
+            url projectURL
             inceptionYear '2017'
             licenses {
                 license {
@@ -44,9 +50,9 @@ install {
                 }
             }
             scm {
-                connection 'https://github.com/appcom-interactive/android-versioning.git'
-                developerConnection 'https://github.com/appcom-interactive/android-versioning.git'
-                url 'https://github.com/appcom-interactive/android-versioning'
+                connection projectGit
+                developerConnection projectGit
+                url projectURL
             }
         }
     }
@@ -59,15 +65,14 @@ bintray {
     publications = ['Publication']
     pkg {
         repo = 'Maven'
-        name = 'android-versioning'
+        name = projectName
         userOrg = user
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/appcom-interactive/android-versioning.git'
+        vcsUrl = projectGit
         version {
-            name = super.gitTag()
+            name = projectVersion
             desc = 'Description'
-            vcsTag = gitTag()
-            attributes = ['gradle-plugin': 'eu.appcom.gradle:android-versioning']
+            vcsTag = projectVersion
         }
     }
 }
@@ -76,9 +81,9 @@ publishing {
     publications {
         Publication(MavenPublication) {
             artifact jar
-            groupId 'eu.appcom.gradle'
-            artifactId 'android-versioning'
-            version gitTag()
+            groupId projectGroup
+            artifactId projectName
+            version projectVersion
         }
     }
 }
@@ -92,7 +97,6 @@ def gitTag() {
     def revlist = 'git rev-list --tags --max-count=1'.execute([], project.rootDir).text.trim()
     def versionName = ('git describe --tags ' + revlist.toString()).execute([], project.rootDir).text.trim()
     if (versionName != null) {
-        println "Version: " + versionName
         return versionName
     } else {
         return "NO_VERSION"

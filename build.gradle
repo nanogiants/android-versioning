@@ -1,32 +1,91 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.7"
+}
+
 group 'eu.appcom.gradle'
 version gitTag()
 
-apply plugin: 'groovy'
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        jcenter()
+    }
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 }
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
     compile gradleApi()
-    compile localGroovy()
 }
 
-apply plugin: 'maven'
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            // TODO: Push to real repository
-            repository(url: uri('/Users/simonvandeloo/Git/gradle-repo'))
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'jar'
+            groupId 'eu.appcom.gradle'
+            artifactId 'android-versioning'
+            version super.gitTag()
+            name 'android-versioning' // pom.project.name must be same as bintray.pkg.name
+            url 'https://github.com/appcom-interactive/android-versioning'
+            inceptionYear '2017'
+            licenses {
+                license {
+                    name 'GPL-3.0'
+                    url 'https://www.gnu.org/licenses/gpl.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection 'https://github.com/appcom-interactive/android-versioning.git'
+                developerConnection 'https://github.com/appcom-interactive/android-versioning.git'
+                url 'https://github.com/appcom-interactive/android-versioning'
+            }
         }
     }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    configurations = ['archives']
+    publications = ['Publication']
+    pkg {
+        repo = 'Maven'
+        name = 'android-versioning'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/appcom-interactive/android-versioning.git'
+        version {
+            name = '0.0.0'
+            desc = 'Description'
+            vcsTag = gitTag()
+            attributes = ['gradle-plugin': 'eu.appcom:eu.appcom.gradle:android-versioning']
+        }
+    }
+}
+
+publishing {
+    publications {
+        Publication(MavenPublication) {
+            artifact jar
+            groupId 'eu.appcom.gradle'
+            artifactId 'android-versioning'
+            version gitTag()
+        }
+    }
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }
 
 def gitTag() {

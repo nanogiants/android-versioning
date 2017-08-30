@@ -16,7 +16,7 @@ class VersioningPlugin implements Plugin<Project> {
         project.android.defaultConfig.versionCode = gitCommitCount()
         project.archivesBaseName = generateArtifactName(artifactName)
 
-        def printVersionInfo = project.tasks.create("versioning_printVersions") {
+        def printVersionInfo = project.tasks.create("printVersions") {
             doLast {
                 println "Version Name: " + gitTag()
                 println "Version Code: " + gitCommitCount()

@@ -84,10 +84,15 @@ publishing {
             groupId projectGroup
             artifactId projectName
             version projectVersion
+
+            artifact sourceJar
         }
     }
 }
 
+task sourceJar(type: Jar) {
+    classifier "sources"
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'

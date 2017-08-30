@@ -16,3 +16,4 @@ repo
 /build
 /captures
 .externalNativeBuild
+/icon.png

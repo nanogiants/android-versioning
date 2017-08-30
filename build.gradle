@@ -71,7 +71,7 @@ bintray {
         vcsUrl = projectGit
         version {
             name = projectVersion
-            desc = 'Description'
+            desc = 'Generate the android app version name and version code automatically (via git)'
             vcsTag = projectVersion
         }
     }

@@ -53,6 +53,10 @@ The name of the output APK will get an additional version number part which cons
 * APK version info: 1.2.0.23
 * full APK name: appname-1.2.0.23-debug.apk
 
+### Show the current versions
+
+Use the gradle task 'printVersions' to print out all relevant version information to the gradle console.
+
 ## License
 
 Copyright (c) 2017 appcom interactive GmbH

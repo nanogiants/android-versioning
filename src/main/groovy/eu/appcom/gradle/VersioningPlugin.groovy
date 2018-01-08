@@ -74,7 +74,7 @@ class VersioningPlugin implements Plugin<Project> {
      * @return the apk version
      */
     def getArtifactVersion() {
-        return "-" + gitTag() + "." + gitCommitCountSinceLastTag()
+        return "-" + gitTag() + "." + gitCommitCount()
     }
 }
 

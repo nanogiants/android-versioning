@@ -19,7 +19,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'eu.appcom.gradle:android-versioning:0.1.1'
+    classpath 'eu.appcom.gradle:android-versioning:0.1.2'
   }
 }
 ```
@@ -47,9 +47,9 @@ versionName ...
 
 ### APK Artifact with versioned name
 
-The name of the output APK will get an additional version number part which consists of the git tag (app version name) and the git commit count since the last tag, e.g.:
+The name of the output APK will get an additional version number part which consists of the git tag (app version name) and the git commit count (app version code), e.g.:
 * version name (git tag): 1.2.0
-* git commit count since last tag: 23
+* version code (git commit count): 23
 * APK version info: 1.2.0.23
 * full APK name: appname-1.2.0.23-debug.apk
 

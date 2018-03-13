@@ -3,18 +3,26 @@ package eu.appcom.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class VersioningPlugin implements Plugin<Project> {
+class VersioningPlugin implements Plugin < Project > {
     Project project
 
     @Override
     void apply(Project project) {
 
         this.project = project
-        String artifactName = project.archivesBaseName
 
-        project.android.defaultConfig.versionName = gitTag()
-        project.android.defaultConfig.versionCode = gitCommitCount()
-        project.archivesBaseName = generateArtifactName(artifactName)
+        if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
+            project.android.defaultConfig.versionName = gitTag()
+            project.android.defaultConfig.versionCode = gitCommitCount()
+
+            if (project.plugins.hasPlugin('com.android.application')) {
+                String artifactName = project.archivesBaseName
+                project.archivesBaseName = generateArtifactName(artifactName)
+            }
+        } else {
+            project.ext.androidVersionName = gitTag()
+            project.ext.androidVersionCode = gitCommitCount()
+        }
 
         def printVersionInfo = project.tasks.create("printVersions") {
             doLast {
@@ -23,6 +31,7 @@ class VersioningPlugin implements Plugin<Project> {
                 println "Artifact name: " + project.archivesBaseName
             }
         }
+
         printVersionInfo.group = "appcom"
         printVersionInfo.description = "Prints the android version information"
     }
@@ -54,7 +63,7 @@ class VersioningPlugin implements Plugin<Project> {
         def versionName = ('git describe --tags ' + revlist.toString()).execute([], project.rootDir).text.trim()
         if (versionName != null) {
             def gitCommitCountSinceLastTag = ('git rev-list ' + versionName.toString() + '.. --count').execute([],
-                    project.rootDir).text.trim().toInteger()
+                project.rootDir).text.trim().toInteger()
             return gitCommitCountSinceLastTag
         } else {
             return 0
@@ -77,5 +86,3 @@ class VersioningPlugin implements Plugin<Project> {
         return "-" + gitTag() + "." + gitCommitCount()
     }
 }
-
-

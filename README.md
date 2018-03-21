@@ -19,7 +19,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'eu.appcom.gradle:android-versioning:0.1.2'
+    classpath 'eu.appcom.gradle:android-versioning:0.2.0'
   }
 }
 ```
@@ -56,6 +56,33 @@ The name of the output APK will get an additional version number part which cons
 ### Show the current versions
 
 Use the gradle task 'printVersions' to print out all relevant version information to the gradle console.
+
+## Experimental Gradle
+
+When using experimental gradle the installation and configuration is slightly different.
+
+### Installation
+
+Add the following to your project level build.gradle
+There is no need to apply the plugin on the module level build.gradle file(s).
+
+```groovy
+apply plugin: 'eu.appcom.gradle.android-versioning'
+
+dependencies {
+    classpath 'com.android.tools.build:gradle-experimental:0.11.1'
+    classpath 'eu.appcom.gradle:android-versioning:0.2.0'
+}
+```
+
+### Usage
+
+To make use of the plugin, just change the following lines from the build.gradle file to this:
+
+```groovy
+versionName androidVersionName
+versionCode androidVersionCode
+```
 
 ## License
 

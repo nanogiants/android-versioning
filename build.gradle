@@ -1,80 +1,107 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
+//buildscript {
+//    repositories {
+//        jcenter()
+//    }
+//}
 
 plugins {
-    id "com.jfrog.bintray" version "1.7"
+    id 'java-gradle-plugin'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'maven-publish'
 }
 
-def projectName = "android-versioning"
+//plugins {
+//    id "com.jfrog.bintray" version "1.8.4"
+//}
+
 def projectGroup = 'eu.appcom.gradle'
-def projectVersion = gitTag()
+def projectName = "android-versioning"
+
+//def projectVersion = gitTag()
+def projectVersion = "1.0.0"
+
 def projectURL = "https://github.com/appcom-interactive/android-versioning"
 def projectGit = "https://github.com/appcom-interactive/android-versioning.git"
 
 group projectGroup
 version projectVersion
 
-allprojects {
-    repositories {
-        jcenter()
-    }
-    apply plugin: 'java'
-    apply plugin: 'groovy'
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+    google()
 }
+
+//allprojects {
+//    repositories {
+//        jcenter()
+//    }
+//    apply plugin: 'java'
+//    apply plugin: 'groovy'
+//    apply plugin: 'maven'
+//    apply plugin: 'maven-publish'
+//}
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.3.11'
-    compile gradleApi()
+    compileOnly gradleApi()
+
+    implementation "com.android.tools.build:gradle:3.3.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation gradleTestKit()
 }
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'jar'
-            groupId projectGroup
-            artifactId projectName
-            version projectVersion
-            name projectName
-            url projectURL
-            inceptionYear '2017'
-            licenses {
-                license {
-                    name 'GPL-3.0'
-                    url 'https://www.gnu.org/licenses/gpl.txt'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                connection projectGit
-                developerConnection projectGit
-                url projectURL
-            }
-        }
-    }
-}
+//install {
+//    repositories.mavenInstaller {
+//        pom.project {
+//            packaging 'jar'
+//            groupId projectGroup
+//            artifactId projectName
+//            version projectVersion
+//            name projectName
+//            url projectURL
+//            inceptionYear '2017'
+//            licenses {
+//                license {
+//                    name 'GPL-3.0'
+//                    url 'https://www.gnu.org/licenses/gpl.txt'
+//                    distribution 'repo'
+//                }
+//            }
+//            scm {
+//                connection projectGit
+//                developerConnection projectGit
+//                url projectURL
+//            }
+//        }
+//    }
+//}
+//
+//bintray {
+//    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+//    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+//    configurations = ['archives']
+//    publications = ['Publication']
+//    pkg {
+//        repo = 'Maven'
+//        name = projectName
+//        userOrg = user
+//        licenses = ['Apache-2.0']
+//        vcsUrl = projectGit
+//        version {
+//            name = projectVersion
+//            desc = 'Generate the android app version name and version code automatically (via git)'
+//            vcsTag = projectVersion
+//        }
+//    }
+//}
+//
 
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    configurations = ['archives']
-    publications = ['Publication']
-    pkg {
-        repo = 'Maven'
-        name = projectName
-        userOrg = user
-        licenses = ['Apache-2.0']
-        vcsUrl = projectGit
-        version {
-            name = projectVersion
-            desc = 'Generate the android app version name and version code automatically (via git)'
-            vcsTag = projectVersion
-        }
-    }
+task sourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
 }
 
 publishing {
@@ -83,19 +110,12 @@ publishing {
             artifact jar
             groupId projectGroup
             artifactId projectName
+
             version projectVersion
 
-            artifact sourceJar
+            artifact sourcesJar
         }
     }
-}
-
-task sourceJar(type: Jar) {
-    classifier "sources"
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
 }
 
 def gitTag() {

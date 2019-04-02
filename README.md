@@ -19,7 +19,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'eu.appcom.gradle:android-versioning:0.2.0'
+    classpath 'eu.appcom.gradle:android-versioning:1.0.0'
   }
 }
 ```
@@ -41,9 +41,29 @@ The android version name is represented by the newest git tag of your repository
 To make use of the plugin, just remove the following lines from the build.gradle file.
 
 ```groovy
-versionCode ...
-versionName ...
+versionCode versioning.getVersionCode()
+versionName versioning.getVersionName()
 ```
+
+## Apk naming
+
+```groovy
+versioning {
+    baseName = "sample-app"
+}
+
+applicationVariants.all { variant ->
+    if (variant.getName().contains("Release")) {
+      variant.outputs.all {
+        outputFileName = versioning.getApkName(variant)
+      }
+    }
+}
+```
+
+This will automatically generate file names for each flavor with the following structure: baseName-flavor-tag-buildnumber.apk
+
+In this example with flavor 'develop': sample-app-develop-1.0.0-33.apk
 
 ### APK Artifact with versioned name
 
@@ -57,32 +77,7 @@ The name of the output APK will get an additional version number part which cons
 
 Use the gradle task 'printVersions' to print out all relevant version information to the gradle console.
 
-## Experimental Gradle
-
-When using experimental gradle the installation and configuration is slightly different.
-
-### Installation
-
-Add the following to your project level build.gradle
-There is no need to apply the plugin on the module level build.gradle file(s).
-
-```groovy
-apply plugin: 'eu.appcom.gradle.android-versioning'
-
-dependencies {
-    classpath 'com.android.tools.build:gradle-experimental:0.11.1'
-    classpath 'eu.appcom.gradle:android-versioning:0.2.0'
-}
-```
-
-### Usage
-
-To make use of the plugin, just change the following lines from the build.gradle file to this:
-
-```groovy
-versionName androidVersionName
-versionCode androidVersionCode
-```
+In Android projects use the gradle task 'printApkNames' to print out all file names for each flavor to the gradle console.
 
 ## License
 

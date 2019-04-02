@@ -5,16 +5,26 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.revwalk.RevCommit
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-import org.gradle.testkit.runner.GradleRunner
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.BufferedWriter
 import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+
 
 class VersioningPluginTest {
 
     companion object {
+
+        @Rule
+        val testProjectDir = TemporaryFolder()
+
+        lateinit var settingsFile: File
+        lateinit var buildFile: File
 
         val projectFolder: TemporaryFolder by lazy {
             val folder = TemporaryFolder()
@@ -43,6 +53,9 @@ class VersioningPluginTest {
         fun setup() {
             git = Git.init().setDirectory(projectFolder.root).call()
             println("init git ${git.repository.directory} ${plugin.getVersionName()} - ${plugin.getVersionCode()}")
+
+            settingsFile = testProjectDir.newFile("settings.gradle");
+            buildFile = testProjectDir.newFile("build.gradle");
         }
 
         @AfterClass
@@ -61,8 +74,6 @@ class VersioningPluginTest {
 
     @Test
     fun `get apk names`() {
-//        addCommit()
-//        assert(0 < plugin.getVersionCode())
         // TODO
 //        GradleRunner.create()
 //                .withProjectDir(testProjectDir.root)
@@ -71,6 +82,17 @@ class VersioningPluginTest {
     }
 
     // Utility methods
+
+    @Throws(IOException::class)
+    private fun writeFile(destination: File, content: String) {
+        var output: BufferedWriter? = null
+        try {
+            output = BufferedWriter(FileWriter(destination))
+            output.write(content)
+        } finally {
+            output?.close()
+        }
+    }
 
     private fun addCommit(): RevCommit {
         File(projectFolder.root, "build.gradle").appendText("// addition")

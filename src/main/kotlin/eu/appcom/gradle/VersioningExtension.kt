@@ -30,9 +30,4 @@ open class VersioningExtension constructor(private val project: Project) {
         }
         return apkFileName
     }
-
-    fun getMappingName(): String {
-        // TODO
-        return ""
-    }
 }

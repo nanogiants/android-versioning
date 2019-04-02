@@ -52,6 +52,15 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation gradleTestKit()
+
+    testImplementation "org.eclipse.jgit:org.eclipse.jgit:5.3.0.201903130848-r"
+}
+
+test {
+    reports {
+        junitXml.enabled = true
+        html.enabled = true
+    }
 }
 
 //install {

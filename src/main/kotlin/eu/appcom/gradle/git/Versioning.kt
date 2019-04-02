@@ -16,11 +16,14 @@ object Versioning {
 
     fun getVersionCode(): Int = getCommitCount()
 
+    fun getBranch(): String = "git rev-parse --abbrev-ref HEAD".get()
+
     fun getVersionName(): String {
-        val branch = "git rev-parse --abbrev-ref HEAD".get()
+        val branch = getBranch()
         if (branch == "master" || branch.contains("release/") || branch.contains("hotfix/")) {
             if (branch.contains("release/")) {
-                return branch.split("/")[0]
+                val tag = branch.split("/")[0]
+                return "$tag-rc_${getCommitCountOnBranch()}"
             }
             return getTag()
         } else {
@@ -32,4 +35,6 @@ object Versioning {
         val revList = "git rev-list --tags --max-count=1".get()
         return "git describe --tags $revList".get()
     }
+
+    private fun getCommitCountOnBranch(): Int = "git rev-list --count develop..HEAD".getInteger()
 }

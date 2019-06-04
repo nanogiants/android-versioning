@@ -32,7 +32,7 @@ apply plugin: 'eu.appcom.gradle.android-versioning'
 
 ## Usage
 
-All usage scenarios take place in the app level build.gradle file.
+All usage scenarios take place in the app level build.gradle file within the android section.
 
 ### Version code and name
 
@@ -45,7 +45,7 @@ versionCode versioning.getVersionCode()
 versionName versioning.getVersionName()
 ```
 
-## Apk naming
+### Apk naming
 
 ```groovy
 versioning {

@@ -1,14 +1,11 @@
 package eu.appcom.gradle
 
-import junit.framework.Assert.assertTrue
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.revwalk.RevCommit
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.AfterClass
-import org.junit.BeforeClass
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
+import org.junit.Assert.assertTrue
 import org.junit.rules.TemporaryFolder
 import java.io.BufferedWriter
 import java.io.File
@@ -20,7 +17,8 @@ class VersioningPluginTest {
 
     companion object {
 
-        @Rule
+        @JvmField
+        @ClassRule
         val testProjectDir = TemporaryFolder()
 
         lateinit var settingsFile: File

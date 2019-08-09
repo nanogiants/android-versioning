@@ -22,7 +22,7 @@ object Versioning {
         val branch = getBranch()
         if (branch == "master" || branch.contains("release/") || branch.contains("hotfix/")) {
             if (branch.contains("release/")) {
-                val tag = branch.split("/")[0]
+                val tag = branch.split("/")[1]
                 return "$tag-rc_${getCommitCountOnBranch()}"
             }
             return getTag()

@@ -7,17 +7,21 @@ import org.gradle.api.Project
 class VersioningPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
-        println("apply versioning plugin")
-
         target.extensions.create("versioning", VersioningExtension::class.java, target)
 
+        println("apply versioning plugin - ${target.versioning().getVersionName()} / ${target.versioning().getVersionCode()}")
+
         target.tasks.create("versioningGitVersionName").apply {
+            group = "appcom"
+            description = "Prints generated git version name"
             doLast {
                 println(target.versioning().getVersionName())
             }
         }
 
         target.tasks.create("versioningGitVersionCode").apply {
+            group = "appcom"
+            description = "Prints generated git version code"
             doLast {
                 println(target.versioning().getVersionCode())
             }

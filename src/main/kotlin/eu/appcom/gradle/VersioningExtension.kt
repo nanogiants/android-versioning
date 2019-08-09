@@ -8,12 +8,19 @@ open class VersioningExtension constructor(private val project: Project) {
 
     var baseName: String? = null
 
-    fun getVersionCode(): Int = Versioning.getVersionCode()
+    private val versionCodeLazy by lazy {
+        Versioning.getVersionCode()
+    }
+    private val versionNameLazy by lazy {
+        Versioning.getVersionName()
+    }
+
+    fun getVersionCode(): Int = versionCodeLazy
 
     fun getVersionName(): String = if (project.hasProperty("customTag")) {
         project.properties["customTag"] as String
     } else {
-        Versioning.getVersionName()
+        versionNameLazy
     }
 
     fun getApkName(variant: ApplicationVariant): String {

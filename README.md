@@ -79,6 +79,11 @@ Use the gradle task 'printVersions' to print out all relevant version informatio
 
 In Android projects use the gradle task 'printApkNames' to print out all file names for each flavor to the gradle console.
 
+### Gradle tasks
+- clean build 
+- publishToMavenLocal
+- bintrayUpload -PbintrayUser=XXX -PbintrayApiKey=XXX
+
 ## License
 
 Copyright (c) 2017 appcom interactive GmbH

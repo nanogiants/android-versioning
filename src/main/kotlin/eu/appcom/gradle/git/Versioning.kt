@@ -23,7 +23,11 @@ object Versioning {
         if (branch == "master" || branch.contains("release/") || branch.contains("hotfix/")) {
             if (branch.contains("release/")) {
                 val tag = branch.split("/")[1]
-                return "$tag-rc_${getCommitCountOnBranch()}"
+                return try {
+                    "$tag-rc_${getCommitCountOnBranch()}"
+                } catch (e: Exception) {
+                    "$tag-rc_${getCommitCountOnBranch(getTag())}"
+                }
             }
             return getTag()
         } else {
@@ -36,5 +40,6 @@ object Versioning {
         return "git describe --tags $revList".get()
     }
 
-    private fun getCommitCountOnBranch(): Int = "git rev-list --count develop..HEAD".getInteger()
+    private fun getCommitCountOnBranch(since: String = "develop"): Int =
+            "git rev-list --count --no-merges $since..HEAD".getInteger()
 }

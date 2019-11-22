@@ -10,36 +10,36 @@ import eu.appcom.gradle.utils.getInteger
 
 object Versioning {
 
-    fun getCommitCount(): Int = "git rev-list --count HEAD".getInteger()
+  fun getCommitCount(): Int = "git rev-list --count HEAD".getInteger()
 
-    fun getSha1(): String = "git rev-parse --short HEAD".get()
+  fun getSha1(): String = "git rev-parse --short HEAD".get()
 
-    fun getVersionCode(): Int = getCommitCount()
+  fun getVersionCode(): Int = getCommitCount()
 
-    fun getBranch(): String = "git rev-parse --abbrev-ref HEAD".get()
+  fun getBranch(): String = "git rev-parse --abbrev-ref HEAD".get()
 
-    fun getVersionName(): String {
-        val branch = getBranch()
-        if (branch == "master" || branch.contains("release/") || branch.contains("hotfix/")) {
-            if (branch.contains("release/")) {
-                val tag = branch.split("/")[1]
-                return try {
-                    "$tag-rc_${getCommitCountOnBranch()}"
-                } catch (e: Exception) {
-                    "$tag-rc_${getCommitCountOnBranch(getTag())}"
-                }
-            }
-            return getTag()
-        } else {
-            return getTag()
+  fun getVersionName(): String {
+    val branch = getBranch()
+    if (branch == "master" || branch.contains("release/") || branch.contains("hotfix/")) {
+      if (branch.contains("release/")) {
+        val tag = branch.split("/")[1]
+        return try {
+          "$tag-rc_${getCommitCountOnBranch()}"
+        } catch (e: Exception) {
+          "$tag-rc_${getCommitCountOnBranch(getTag())}"
         }
+      }
+      return getTag()
+    } else {
+      return getTag()
     }
+  }
 
-    private fun getTag(): String {
-        val revList = "git rev-list --tags --max-count=1".get()
-        return "git describe --tags $revList".get()
-    }
+  private fun getTag(): String {
+    val revList = "git rev-list --tags --max-count=1".get()
+    return "git describe --tags $revList".get()
+  }
 
-    private fun getCommitCountOnBranch(since: String = "develop"): Int =
-            "git rev-list --count --no-merges $since..HEAD".getInteger()
+  private fun getCommitCountOnBranch(since: String = "develop"): Int =
+    "git rev-list --count --no-merges $since..HEAD".getInteger()
 }

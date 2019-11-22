@@ -30,10 +30,13 @@ dependencies {
     implementation "com.android.tools.build:gradle:3.4.2"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation gradleTestKit()
 
-    testImplementation "org.eclipse.jgit:org.eclipse.jgit:5.3.0.201903130848-r"
+    testImplementation Deps.junit5Api
+    testImplementation Deps.junit5Params
+    testRuntimeOnly Deps.junit5Engine
+
+    testImplementation "org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r"
 }
 
 test {

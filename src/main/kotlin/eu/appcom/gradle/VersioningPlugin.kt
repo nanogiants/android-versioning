@@ -1,6 +1,10 @@
 package eu.appcom.gradle
 
-import com.android.build.gradle.*
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.FeaturePlugin
+import com.android.build.gradle.LibraryPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -11,26 +15,24 @@ class VersioningPlugin : Plugin<Project> {
 
     println("apply versioning plugin - ${target.versioning().getVersionName()} / ${target.versioning().getVersionCode()}")
 
-    target.tasks.create("versioningGitVersionName").apply {
-      group = "appcom"
-      description = "Prints generated git version name"
-      doLast {
+    target.tasks.register("versioningGitVersionName") {
+      it.group = "appcom"
+      it.description = "Prints generated git version name"
+      it.doLast {
         println(target.versioning().getVersionName())
       }
     }
-
-    target.tasks.create("versioningGitVersionCode").apply {
-      group = "appcom"
-      description = "Prints generated git version code"
-      doLast {
+    target.tasks.register("versioningGitVersionCode") {
+      it.group = "appcom"
+      it.description = "Prints generated git version code"
+      it.doLast {
         println(target.versioning().getVersionCode())
       }
     }
-
-    target.tasks.create("printVersions").apply {
-      group = "appcom"
-      description = "Prints the android version information"
-      doLast {
+    target.tasks.register("printVersions") {
+      it.group = "appcom"
+      it.description = "Prints the android version information"
+      it.doLast {
         println("Version Name: ${target.versioning().getVersionName()}")
         println("Version Code: ${target.versioning().getVersionCode()}")
       }
@@ -46,12 +48,12 @@ class VersioningPlugin : Plugin<Project> {
         }
         is AppPlugin -> {
           // add only if application
-          target.tasks.create("printApkNames").apply {
+          target.tasks.register("printApkNames") { task ->
             val names = mutableListOf<String>()
             target.android.app.applicationVariants.all { variant ->
               names.add(target.versioning().getApkName(variant))
             }
-            doLast {
+            task.doLast {
               println("generated apk names:")
               names.forEach { apkName ->
                 println(apkName)
@@ -63,7 +65,8 @@ class VersioningPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.versioning(): VersioningExtension = this.extensions.getByType(VersioningExtension::class.java)
+  private fun Project.versioning(): VersioningExtension =
+    this.extensions.getByType(VersioningExtension::class.java)
 
   /**
    * Access the `android` extension of this project. If the project is not an

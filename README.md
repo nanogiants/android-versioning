@@ -1,6 +1,6 @@
 # Android Versioning Gradle Plugin
 
-This plugin automatically generates the Android app version name and version code using Git. It also appends the version and app variant name to your ABB/APK artifacts.
+This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your ABB/APK artifacts.
 
 ## Usage
 
@@ -46,13 +46,14 @@ android {
 * `getVersionCode()` returns the current Git commit count
 * `getVersionName()` returns the latest Git tag of your repository
 
+#### Optional:
+* `getVersionName(checkBranch: Boolean)` if `checkBranch` is set to *true* the plugin will check if the current branch is `release/x.x.x` or `hotfix/x.x.x` and use the naming instead the latest tag.
 
 ### Artifact naming
 
-The plugin will automatically set the APK and AAB naming for all assemble and bundle tasks. The plugin includes the default `archivesBaseName` property (otherwise the module name will be used).
-This will also work if you do not use the versioning extension for configuring the defaultConfig.
+The plugin will automatically set the APK and AAB naming for all assemble and bundle tasks. This will also work if you do not use the versioning extension in the defaultConfig. You can still use the default `archivesBaseName` property.
 
-**Example:** 
+#### Example:
 
 Build Variant `productionStoreDebug`
 ```groovy
@@ -66,6 +67,13 @@ Artifacts:
 ```
 MyAppName-production-store-3.9.0-3272-debug.apk
 MyAppName-production-store-3.9.0-3272-debug.aab
+```
+#### Optional:
+You can define a comma separated list of buildTypes (e.g. debug) be excluded from the artifact naming.
+```groovy
+versioning {
+  excludeBuildTypes = "debug" {
+}
 ```
 
 ## License

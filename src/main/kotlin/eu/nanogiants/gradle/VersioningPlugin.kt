@@ -36,10 +36,10 @@ class VersioningPlugin : Plugin<Project> {
     val artifactBaseName =
         project.convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName ?: project.name
 
-    project.tasks.create("printVersions").apply {
-      group = "Versioning"
-      description = "Prints the Android version information."
-      doLast {
+    project.tasks.register("printVersions") {
+      it.group = "Versioning"
+      it.description = "Prints the Android version information."
+      it.doLast {
         extension.getVersionName()
         extension.getVersionCode()
       }
@@ -56,20 +56,19 @@ class VersioningPlugin : Plugin<Project> {
             val newOutputName = getOutputName(artifactBaseName, variant, appExtension.defaultConfig, "aab")
             println(newOutputName)
 
-            val moveAabTaskName = "rename${variant.name.capitalize(Locale.ROOT)}Aab"
-
-            project.tasks.create(moveAabTaskName, Copy::class.java) {
-              it.from(bundleOutputPath)
-              it.into(bundleOutputPath)
-              it.rename(bundleName, newOutputName)
-              it.doLast {
-                if (File(bundleOutputPath + newOutputName).exists()) {
-                  project.delete(bundleOutputPath + bundleName)
-                  println("Moved $bundleName to $newOutputName")
+            val moveAabTask =
+                project.tasks.register("rename${variant.name.capitalize(Locale.ROOT)}Aab", Copy::class.java) {
+                  it.from(bundleOutputPath)
+                  it.into(bundleOutputPath)
+                  it.rename(bundleName, newOutputName)
+                  it.doLast {
+                    if (File(bundleOutputPath + newOutputName).exists()) {
+                      project.delete(bundleOutputPath + bundleName)
+                      println("Moved $bundleName to $newOutputName")
+                    }
+                  }
                 }
-              }
-            }
-            task.finalizedBy(moveAabTaskName)
+            task.finalizedBy(moveAabTask)
           }
         }
       } else if (task.name.matches(assembleRegex)) {
@@ -77,8 +76,7 @@ class VersioningPlugin : Plugin<Project> {
 
         appExtension.applicationVariants.all { variant ->
           if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
-            val newOutputName =
-                getOutputName(artifactBaseName, variant, appExtension.defaultConfig, "apk")
+            val newOutputName = getOutputName(artifactBaseName, variant, appExtension.defaultConfig, "apk")
             println(newOutputName)
             variant.outputs.all {
               (it as BaseVariantOutputImpl).outputFileName = newOutputName

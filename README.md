@@ -1,92 +1,72 @@
-## What is this?
+# Android Versioning Gradle Plugin [ ![Download](https://api.bintray.com/packages/appcom-interactive/android/android-versioning/images/download.svg) ](https://bintray.com/appcom-interactive/android/android-versioning/_latestVersion)
 
-* Generate the android app version name and version code automatically (via git).
-* Append the version number to your APK artifacts.
+This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your ABB/APK artifacts.
 
-## Preconditions
+## Usage
 
-* [Git](https://git-scm.com/)
-* At least one git tag which defines your current version (e.g. 1.0.2).
-* We suggest to follow the [SemVer](http://semver.org/) specification for the versioning.
-
-## Installation
-
-Add the following to your project level build.gradle
-
+### `buildscript` block:
 ```groovy
+// top-level build.gradle
 buildscript {
   repositories {
     jcenter()
   }
   dependencies {
-    classpath 'eu.appcom.gradle:android-versioning:1.0.0'
+    classpath 'eu.nanogiants:android-versioning:2.0.0'
   }
 }
 ```
-
-Add the following to the module level build.gradle
-
 ```groovy
-apply plugin: 'eu.appcom.gradle.android-versioning'
+// app build.gradle
+apply plugin: 'eu.nanogiants.android-versioning'
 ```
-
-## Usage
-
-All usage scenarios take place in the app level build.gradle file within the android section.
 
 ### Version code and name
-
-The android version code is represented by the git commit count.
-The android version name is represented by the newest git tag of your repository.
-To make use of the plugin, just remove the following lines from the build.gradle file.
-
 ```groovy
-versionCode versioning.getVersionCode()
-versionName versioning.getVersionName()
+android {
+  defaultConfig {
+    versionCode versioning.getVersionCode()
+    versionName versioning.getVersionName()
+  }
+}
 ```
+**Use the plugin by referencing the versioning extension.**
 
-### Apk naming
+* `getVersionCode()` returns the current Git commit count
+* `getVersionName()` returns the latest Git tag of your repository
 
+#### Optional:
+* `getVersionName(checkBranch: Boolean)` if `checkBranch` is set to *true* the plugin will check if the current branch is `release/x.x.x` or `hotfix/x.x.x` and use the naming instead the latest tag.
+
+### Artifact naming
+
+The plugin will automatically set the APK and AAB naming for all assemble and bundle tasks. This will also work if you do not use the versioning extension in the defaultConfig. You can still use the default `archivesBaseName` property.
+
+#### Example:
+
+Build Variant `productionStoreDebug`
+```groovy
+android {
+  defaultConfig {
+    archivesBaseName = "MyAppName"
+  }
+}
+```
+Artifacts:
+```
+MyAppName-production-store-3.9.0-3272-debug.apk
+MyAppName-production-store-3.9.0-3272-debug.aab
+```
+#### Optional:
+You can define a comma separated list of buildTypes (e.g. debug) be excluded from the artifact naming.
 ```groovy
 versioning {
-    baseName = "sample-app"
-}
-
-applicationVariants.all { variant ->
-    if (variant.getName().contains("Release")) {
-      variant.outputs.all {
-        outputFileName = versioning.getApkName(variant)
-      }
-    }
+  excludeBuildTypes = "debug" {
 }
 ```
 
-This will automatically generate file names for each flavor with the following structure: baseName-flavor-tag-buildnumber.apk
-
-In this example with flavor 'develop': sample-app-develop-1.0.0-33.apk
-
-### APK Artifact with versioned name
-
-The name of the output APK will get an additional version number part which consists of the git tag (app version name) and the git commit count (app version code), e.g.:
-* version name (git tag): 1.2.0
-* version code (git commit count): 23
-* APK version info: 1.2.0.23
-* full APK name: appname-1.2.0.23-debug.apk
-
-### Show the current versions
-
-Use the gradle task 'printVersions' to print out all relevant version information to the gradle console.
-
-In Android projects use the gradle task 'printApkNames' to print out all file names for each flavor to the gradle console.
-
-### Gradle tasks
-- clean build 
-- publishToMavenLocal
-- bintrayUpload -PbintrayUser=XXX -PbintrayApiKey=XXX
-
 ## License
-
-Copyright (c) 2017 appcom interactive GmbH
+	Copyright (C) 2020 NanoGiants GmbH
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

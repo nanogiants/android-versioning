@@ -1,4 +1,4 @@
-# Android Versioning Gradle Plugin
+# Android Versioning Gradle Plugin [ ![Download](https://api.bintray.com/packages/appcom-interactive/android/android-versioning/images/download.svg) ](https://bintray.com/appcom-interactive/android/android-versioning/_latestVersion)
 
 This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your ABB/APK artifacts.
 
@@ -19,17 +19,6 @@ buildscript {
 ```groovy
 // app build.gradle
 apply plugin: 'eu.nanogiants.android-versioning'
-```
-
-or via the (if you also apply the `com.android.application` this way)
-
-### `plugins` block:
-```groovy
-plugins {
-  id 'com.android.application'
-//...
-  id 'eu.nanogiants.android-versioning' version '2.0.0'
-}
 ```
 
 ### Version code and name

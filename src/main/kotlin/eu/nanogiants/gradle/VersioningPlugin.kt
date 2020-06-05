@@ -10,11 +10,11 @@ import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import com.android.build.gradle.internal.dsl.DefaultConfig
 import eu.nanogiants.gradle.ext.listContains
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.plugins.BasePluginConvention
-import org.gradle.api.tasks.Copy
 import java.io.File
 import java.util.Locale
 
@@ -29,12 +29,10 @@ class VersioningPlugin : Plugin<Project> {
     try {
       appExtension = project.extensions.getByType(AppExtension::class.java)
     } catch (e: UnknownDomainObjectException) {
-      error("Project '${project.name}' is not an Android module. Can't access 'android' extension.")
+      throw GradleException("Project '${project.name}' is not an Android module. Can't access 'android' extension.")
     }
 
     val extension = project.extensions.create("versioning", VersioningPluginExtension::class.java)
-    val artifactBaseName =
-        project.convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName ?: project.name
 
     project.tasks.register("printVersions") {
       it.group = "Versioning"
@@ -51,24 +49,25 @@ class VersioningPlugin : Plugin<Project> {
 
         appExtension.applicationVariants.all { variant ->
           if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
+            val artifactBaseName = project.convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName
+                ?: project.name
             val bundleName = "$artifactBaseName-${variant.baseName}.aab"
             val bundleOutputPath = "${project.buildDir.absolutePath}/outputs/bundle/$variantName/"
             val newOutputName = getOutputName(artifactBaseName, variant, appExtension.defaultConfig, "aab")
             println(newOutputName)
 
-            val moveAabTask =
-                project.tasks.register("rename${variant.name.capitalize(Locale.ROOT)}Aab", Copy::class.java) {
-                  it.from(bundleOutputPath)
-                  it.into(bundleOutputPath)
-                  it.rename(bundleName, newOutputName)
+            val renameAabTask =
+                project.tasks.register("versioningPluginRename${variant.name.capitalize(Locale.ROOT)}Aab") {
                   it.doLast {
-                    if (File(bundleOutputPath + newOutputName).exists()) {
-                      project.delete(bundleOutputPath + bundleName)
-                      println("Moved $bundleName to $newOutputName")
+                    val success = File(bundleOutputPath + bundleName).renameTo(File(bundleOutputPath + newOutputName))
+                    if (success) {
+                      println("Renamed $bundleName to $newOutputName")
+                    } else {
+                      project.logger.error("Renaming $bundleName to $newOutputName failed.")
                     }
                   }
                 }
-            task.finalizedBy(moveAabTask)
+            task.finalizedBy(renameAabTask)
           }
         }
       } else if (task.name.matches(assembleRegex)) {
@@ -76,6 +75,8 @@ class VersioningPlugin : Plugin<Project> {
 
         appExtension.applicationVariants.all { variant ->
           if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
+            val artifactBaseName = project.convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName
+                ?: project.name
             val newOutputName = getOutputName(artifactBaseName, variant, appExtension.defaultConfig, "apk")
             println(newOutputName)
             variant.outputs.all {

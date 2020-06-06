@@ -1,3 +1,8 @@
+/*
+ * Created by NanoGiants GmbH on 06-06-2020.
+ * Copyright © 2020 NanoGiants GmbH. All rights reserved.
+ */
+
 package eu.nanogiants.gradle.ext
 
 import com.android.build.gradle.api.ApplicationVariant

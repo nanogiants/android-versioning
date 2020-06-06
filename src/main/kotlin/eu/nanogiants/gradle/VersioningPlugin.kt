@@ -9,13 +9,14 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import com.android.build.gradle.internal.dsl.DefaultConfig
+import eu.nanogiants.gradle.ext.addRenameArtifactAction
+import eu.nanogiants.gradle.ext.addRenameMappingAction
 import eu.nanogiants.gradle.ext.listContains
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.plugins.BasePluginConvention
-import java.io.File
 import java.util.Locale
 
 @ExperimentalStdlibApi
@@ -43,44 +44,41 @@ class VersioningPlugin : Plugin<Project> {
       }
     }
 
-    project.tasks.all { task ->
-      if (task.name.matches(bundleRegex)) {
-        val variantName = task.name.substringAfter("bundle").decapitalize(Locale.ROOT)
+    project.afterEvaluate {
+      val baseName = project.convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName ?: project.name
 
-        appExtension.applicationVariants.all { variant ->
-          if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
-            val artifactBaseName = project.convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName
-                ?: project.name
-            val bundleName = "$artifactBaseName-${variant.baseName}.aab"
-            val bundleOutputPath = "${project.buildDir.absolutePath}/outputs/bundle/$variantName/"
-            val newOutputName = getOutputName(artifactBaseName, variant, appExtension.defaultConfig, "aab")
-            println(newOutputName)
+      project.tasks.configureEach { task ->
+        if (task.name.matches(bundleRegex)) {
+          val variantName = task.name.substringAfter("bundle").decapitalize(Locale.ROOT)
 
-            val renameAabTask =
-                project.tasks.register("versioningPluginRename${variant.name.capitalize(Locale.ROOT)}Aab") {
-                  it.doLast {
-                    val success = File(bundleOutputPath + bundleName).renameTo(File(bundleOutputPath + newOutputName))
-                    if (success) {
-                      println("Renamed $bundleName to $newOutputName")
-                    } else {
-                      project.logger.error("Renaming $bundleName to $newOutputName failed.")
-                    }
-                  }
-                }
-            task.finalizedBy(renameAabTask)
+          appExtension.applicationVariants.configureEach { variant ->
+            if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
+              val bundleName = "$baseName-${variant.baseName}.aab"
+              val newBundleName = getOutputName(baseName, variant, appExtension.defaultConfig, "aab")
+              val bundleOutputPath = "${project.buildDir.absolutePath}/outputs/bundle/$variantName/"
+
+              task.addRenameArtifactAction(project, bundleName, newBundleName, bundleOutputPath)
+
+              val newMappingName = getOutputName(baseName, variant, appExtension.defaultConfig, "txt", "aab")
+              task.addRenameMappingAction(project, variant, newMappingName)
+            }
           }
-        }
-      } else if (task.name.matches(assembleRegex)) {
-        val variantName = task.name.substringAfter("assemble").decapitalize(Locale.ROOT)
+        } else if (task.name.matches(assembleRegex)) {
+          val variantName = task.name.substringAfter("assemble").decapitalize(Locale.ROOT)
 
-        appExtension.applicationVariants.all { variant ->
-          if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
-            val artifactBaseName = project.convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName
-                ?: project.name
-            val newOutputName = getOutputName(artifactBaseName, variant, appExtension.defaultConfig, "apk")
-            println(newOutputName)
-            variant.outputs.all {
-              (it as BaseVariantOutputImpl).outputFileName = newOutputName
+          appExtension.applicationVariants.configureEach { variant ->
+            if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
+              val apkOutputPath = "${project.buildDir.absolutePath}/outputs/apk/$variantName/"
+
+              variant.outputs.configureEach {
+                val apkName = (it as BaseVariantOutputImpl).outputFileName
+                val newApkName = getOutputName(baseName, variant, appExtension.defaultConfig, "apk")
+
+                task.addRenameArtifactAction(project, apkName, newApkName, apkOutputPath)
+              }
+
+              val newMappingName = getOutputName(baseName, variant, appExtension.defaultConfig, "txt", "apk")
+              task.addRenameMappingAction(project, variant, newMappingName)
             }
           }
         }
@@ -92,7 +90,8 @@ class VersioningPlugin : Plugin<Project> {
       artifactBaseName: String,
       variant: ApplicationVariant,
       defaultConfig: DefaultConfig,
-      extension: String
+      extension: String,
+      suffix: String = ""
   ): String {
     return StringBuilder().apply {
       append(artifactBaseName)
@@ -106,8 +105,18 @@ class VersioningPlugin : Plugin<Project> {
       append(defaultConfig.versionCode.toString())
       append("-")
       append(variant.buildType.name)
-      append(".")
-      append(extension)
+      if (suffix.isNotEmpty()) {
+        append("-")
+        append(suffix)
+      }
+      if (extension == "apk" && !variant.isSigningReady) {
+        append("-unsigned.apk")
+      } else if (extension == "txt") {
+        append("-mapping.txt")
+      } else {
+        append(".")
+        append(extension)
+      }
     }.toString()
   }
 }

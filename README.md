@@ -1,6 +1,6 @@
 # Android Versioning Gradle Plugin [ ![Download](https://api.bintray.com/packages/appcom-interactive/android/android-versioning/images/download.svg) ](https://bintray.com/appcom-interactive/android/android-versioning/_latestVersion)
 
-This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your ABB/APK artifacts.
+This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your APK/AAB and obfuscation mapping artifacts.
 
 ## Usage
 
@@ -12,7 +12,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'eu.nanogiants:android-versioning:2.0.1'
+    classpath 'eu.nanogiants:android-versioning:2.1.0'
   }
 }
 ```
@@ -30,20 +30,17 @@ android {
   }
 }
 ```
-**Use the plugin by referencing the versioning extension.**
-
-* `getVersionCode()` returns the current Git commit count
-* `getVersionName()` returns the latest Git tag of your repository
+#### Use the plugin by referencing the versioning extension.
+* `versioning.getVersionCode()` returns the current Git commit count
+* `versioning.getVersionName()` returns the latest Git tag
 
 #### Optional:
-* `getVersionName(checkBranch: Boolean)` if `checkBranch` is set to *true* the plugin will check if the current branch is `release/x.x.x` or `hotfix/x.x.x` and use the naming instead the latest tag.
+* `versioning.getVersionName(checkBranch: Boolean)` if `checkBranch` is set to *true* the plugin will check if the current branch is `release/x.x.x` or `hotfix/x.x.x` and use the branch name instead the latest tag.
 
 ### Artifact naming
-
-The plugin will automatically set the APK and AAB naming for all assemble and bundle tasks. This will also work if you do not use the versioning extension in the defaultConfig. You can still use the default `archivesBaseName` property.
+The plugin will automatically rename APK, AAB and Mapping.txt files for all assemble and bundle tasks. This will also work if you do not use the versioning extension in the defaultConfig. You can still use the default `archivesBaseName` property.
 
 #### Example:
-
 Build Variant `productionStoreDebug`
 ```groovy
 android {
@@ -57,9 +54,13 @@ Artifacts:
 MyAppName-production-store-3.9.0-3272-debug.apk
 MyAppName-production-store-3.9.0-3272-debug.aab
 ```
+#### Note:
+Since Android Studio does not know about the artifact renaming, the `locate` or `analyze` links in the event log and notifications will stop working. To compensate that, the plugin prints file URI for every renamed artifact. 
+
 #### Optional:
-You can define a comma separated list of buildTypes (e.g. debug) be excluded from the artifact naming.
+You can define a comma separated list of buildTypes (e.g. debug) to be excluded from the artifact naming.
 ```groovy
+// app build.gradle
 versioning {
   excludeBuildTypes = "debug" {
 }

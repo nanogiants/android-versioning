@@ -57,10 +57,10 @@ class VersioningPlugin : Plugin<Project> {
               val newBundleName = getOutputName(baseName, variant, appExtension.defaultConfig, "aab")
               val bundleOutputPath = "${project.buildDir.absolutePath}/outputs/bundle/$variantName/"
 
-              task.addRenameArtifactAction(project, bundleName, newBundleName, bundleOutputPath)
+              task.addRenameArtifactAction(bundleName, newBundleName, bundleOutputPath)
 
               val newMappingName = getOutputName(baseName, variant, appExtension.defaultConfig, "txt", "aab")
-              task.addRenameMappingAction(project, variant, newMappingName)
+              task.addRenameMappingAction(variant, newMappingName)
             }
           }
         } else if (task.name.matches(assembleRegex)) {
@@ -74,11 +74,11 @@ class VersioningPlugin : Plugin<Project> {
                 val apkName = (it as BaseVariantOutputImpl).outputFileName
                 val newApkName = getOutputName(baseName, variant, appExtension.defaultConfig, "apk")
 
-                task.addRenameArtifactAction(project, apkName, newApkName, apkOutputPath)
+                task.addRenameArtifactAction(apkName, newApkName, apkOutputPath)
               }
 
               val newMappingName = getOutputName(baseName, variant, appExtension.defaultConfig, "txt", "apk")
-              task.addRenameMappingAction(project, variant, newMappingName)
+              task.addRenameMappingAction(variant, newMappingName)
             }
           }
         }
@@ -87,11 +87,11 @@ class VersioningPlugin : Plugin<Project> {
   }
 
   private fun getOutputName(
-      artifactBaseName: String,
-      variant: ApplicationVariant,
-      defaultConfig: DefaultConfig,
-      extension: String,
-      suffix: String = ""
+    artifactBaseName: String,
+    variant: ApplicationVariant,
+    defaultConfig: DefaultConfig,
+    extension: String,
+    suffix: String = ""
   ): String {
     return StringBuilder().apply {
       append(artifactBaseName)

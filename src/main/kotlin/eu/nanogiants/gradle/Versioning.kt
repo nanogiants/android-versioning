@@ -5,7 +5,8 @@
 
 package eu.nanogiants.gradle
 
-import eu.nanogiants.gradle.ext.getOutput
+import eu.nanogiants.gradle.ext.runCommand
+import org.gradle.api.GradleException
 
 object Versioning {
 
@@ -15,18 +16,18 @@ object Versioning {
     return (if (checkBranch) getBranchNameOrTag() else getTag()).apply { println("VersionName $this") }
   }
 
-  private fun getCommitCount(): Int = "git rev-list --count HEAD".getOutput().toInt()
+  private fun getCommitCount() = "git rev-list --count HEAD".runCommand().toIntOrNull()
+    ?: throw GradleException("Error reading current commit count.")
 
   private fun getTag(): String {
-    val revList = "git rev-list --tags --max-count=1".getOutput()
-    return "git describe --tags $revList".getOutput()
+    val revList = "git rev-list --tags --max-count=1".runCommand()
+    val result = "git describe --tags $revList".runCommand()
+    return if (result.isNotEmpty()) result else throw GradleException("Error reading current tag")
   }
 
-  private fun getBranch(): String = "git rev-parse --abbrev-ref HEAD".getOutput()
-
   private fun getBranchNameOrTag(): String {
-    val branch = getBranch()
-    return if (branch.startsWith("release/") || branch.startsWith("hotfix/")) {
+    val branch = "git rev-parse --abbrev-ref HEAD".runCommand()
+    return if (branch.matches("^release/\\d+.*".toRegex()) || branch.matches("^hotfix/\\d+.*".toRegex())) {
       println("Generate versionName from branch $branch")
       branch.split("/")[1]
     } else {

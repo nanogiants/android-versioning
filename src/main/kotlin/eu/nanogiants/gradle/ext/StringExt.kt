@@ -1,25 +1,23 @@
 /*
- * Created by NanoGiants GmbH on 06-06-2020.
+ * Created by NanoGiants GmbH on 06-07-2020.
  * Copyright © 2020 NanoGiants GmbH. All rights reserved.
  */
 
 package eu.nanogiants.gradle.ext
 
-import java.io.BufferedReader
-import java.io.IOException
-import java.util.*
+import org.gradle.api.GradleException
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-internal fun String.getOutput() = this.runCommand()?.use { return it.readText().trim() } ?: ""
-
-internal fun String.runCommand(): BufferedReader? = try {
-  ProcessBuilder(this.split("\\s".toRegex())).start().run {
-    waitFor(10, TimeUnit.SECONDS)
-    inputStream.bufferedReader()
+internal fun String.runCommand(): String {
+  return try {
+    ProcessBuilder(this.split("\\s".toRegex())).start().run {
+      waitFor(10, TimeUnit.SECONDS)
+      inputStream.bufferedReader().use { it.readText().trim() }
+    }
+  } catch (e: Exception) {
+    throw GradleException(e.message ?: "Error executing command :$this")
   }
-} catch (e: IOException) {
-  e.printStackTrace()
-  null
 }
 
 internal fun String?.listContains(element: String) =

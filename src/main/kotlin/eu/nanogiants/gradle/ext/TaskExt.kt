@@ -1,16 +1,15 @@
 /*
- * Created by NanoGiants GmbH on 06-06-2020.
+ * Created by NanoGiants GmbH on 06-07-2020.
  * Copyright © 2020 NanoGiants GmbH. All rights reserved.
  */
 
 package eu.nanogiants.gradle.ext
 
 import com.android.build.gradle.api.ApplicationVariant
-import org.gradle.api.Project
 import org.gradle.api.Task
 import java.io.File
 
-internal fun Task.addRenameArtifactAction(project: Project, oldOutput: String, newOutput: String, outputPath: String) {
+internal fun Task.addRenameArtifactAction(oldOutput: String, newOutput: String, outputPath: String) {
   println(newOutput)
 
   doLast {
@@ -19,12 +18,12 @@ internal fun Task.addRenameArtifactAction(project: Project, oldOutput: String, n
     if (success) {
       println("Created file://${newFile.absolutePath}")
     } else {
-      project.logger.error("Renaming $oldOutput to $newOutput failed.")
+      logger.error("Renaming $oldOutput to $newOutput failed.")
     }
   }
 }
 
-internal fun Task.addRenameMappingAction(project: Project, variant: ApplicationVariant, newOutput: String) {
+internal fun Task.addRenameMappingAction(variant: ApplicationVariant, newOutput: String) {
   if (variant.buildType.isMinifyEnabled) {
     variant.mappingFileProvider.orNull?.firstOrNull()?.let { mappingFile ->
       println(newOutput)
@@ -35,7 +34,7 @@ internal fun Task.addRenameMappingAction(project: Project, variant: ApplicationV
         if (success) {
           println("Created file://${newFile.absolutePath}")
         } else {
-          project.logger.error("Renaming mapping.txt to $newOutput failed.")
+          logger.error("Renaming mapping.txt to $newOutput failed.")
         }
       }
     }

@@ -6,11 +6,10 @@
 package eu.nanogiants.gradle
 
 import com.android.build.gradle.AppExtension
-import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import com.android.build.gradle.internal.dsl.DefaultConfig
 import eu.nanogiants.gradle.ext.addRenameArtifactAction
 import eu.nanogiants.gradle.ext.addRenameMappingAction
+import eu.nanogiants.gradle.ext.generateOutputName
 import eu.nanogiants.gradle.ext.listContains
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -54,12 +53,12 @@ class VersioningPlugin : Plugin<Project> {
           appExtension.applicationVariants.configureEach { variant ->
             if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
               val bundleName = "$baseName-${variant.baseName}.aab"
-              val newBundleName = getOutputName(baseName, variant, appExtension.defaultConfig, "aab")
+              val newBundleName = variant.generateOutputName(baseName, "aab")
               val bundleOutputPath = "${project.buildDir.absolutePath}/outputs/bundle/$variantName/"
 
               task.addRenameArtifactAction(bundleName, newBundleName, bundleOutputPath)
 
-              val newMappingName = getOutputName(baseName, variant, appExtension.defaultConfig, "txt", "aab")
+              val newMappingName = variant.generateOutputName(baseName, "txt", "aab")
               task.addRenameMappingAction(variant, newMappingName)
             }
           }
@@ -72,51 +71,17 @@ class VersioningPlugin : Plugin<Project> {
 
               variant.outputs.configureEach {
                 val apkName = (it as BaseVariantOutputImpl).outputFileName
-                val newApkName = getOutputName(baseName, variant, appExtension.defaultConfig, "apk")
+                val newApkName = variant.generateOutputName(baseName, "apk")
 
                 task.addRenameArtifactAction(apkName, newApkName, apkOutputPath)
               }
 
-              val newMappingName = getOutputName(baseName, variant, appExtension.defaultConfig, "txt", "apk")
+              val newMappingName = variant.generateOutputName(baseName, "txt", "apk")
               task.addRenameMappingAction(variant, newMappingName)
             }
           }
         }
       }
     }
-  }
-
-  private fun getOutputName(
-    artifactBaseName: String,
-    variant: ApplicationVariant,
-    defaultConfig: DefaultConfig,
-    extension: String,
-    suffix: String = ""
-  ): String {
-    return StringBuilder().apply {
-      append(artifactBaseName)
-      variant.productFlavors.forEach {
-        append("-")
-        append(it.name)
-      }
-      append("-")
-      append(defaultConfig.versionName)
-      append("-")
-      append(defaultConfig.versionCode.toString())
-      append("-")
-      append(variant.buildType.name)
-      if (suffix.isNotEmpty()) {
-        append("-")
-        append(suffix)
-      }
-      if (extension == "apk" && !variant.isSigningReady) {
-        append("-unsigned.apk")
-      } else if (extension == "txt") {
-        append("-mapping.txt")
-      } else {
-        append(".")
-        append(extension)
-      }
-    }.toString()
   }
 }

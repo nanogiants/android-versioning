@@ -58,8 +58,12 @@ class VersioningPlugin : Plugin<Project> {
 
               task.addRenameArtifactAction(bundleName, newBundleName, bundleOutputPath)
 
-              val newMappingName = variant.generateOutputName(baseName, "txt", "aab")
-              task.addRenameMappingAction(variant, newMappingName)
+              if (variant.buildType.isMinifyEnabled) {
+                variant.mappingFileProvider.orNull?.firstOrNull()?.let {
+                  val newMappingName = variant.generateOutputName(baseName, "txt", "aab")
+                  task.addRenameMappingAction(it, newMappingName)
+                }
+              }
             }
           }
         } else if (task.name.matches(assembleRegex)) {
@@ -76,8 +80,12 @@ class VersioningPlugin : Plugin<Project> {
                 task.addRenameArtifactAction(apkName, newApkName, apkOutputPath)
               }
 
-              val newMappingName = variant.generateOutputName(baseName, "txt", "apk")
-              task.addRenameMappingAction(variant, newMappingName)
+              if (variant.buildType.isMinifyEnabled) {
+                variant.mappingFileProvider.orNull?.firstOrNull()?.let {
+                  val newMappingName = variant.generateOutputName(baseName, "txt", "apk")
+                  task.addRenameMappingAction(it, newMappingName)
+                }
+              }
             }
           }
         }

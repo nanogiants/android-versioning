@@ -12,7 +12,7 @@ object Versioning {
 
   internal fun getVersionCode() = getCommitCount().apply { println("VersionCode $this") }
 
-  internal fun getVersionName(checkBranch: Boolean = false): String {
+  internal fun getVersionName(checkBranch: Boolean): String {
     return (if (checkBranch) getBranchNameOrTag() else getTag()).apply { println("VersionName $this") }
   }
 

@@ -5,7 +5,6 @@
 
 package eu.nanogiants.gradle.ext
 
-import com.android.build.gradle.api.ApplicationVariant
 import org.gradle.api.Task
 import java.io.File
 
@@ -23,20 +22,16 @@ internal fun Task.addRenameArtifactAction(oldOutput: String, newOutput: String, 
   }
 }
 
-internal fun Task.addRenameMappingAction(variant: ApplicationVariant, newOutput: String) {
-  if (variant.buildType.isMinifyEnabled) {
-    variant.mappingFileProvider.orNull?.firstOrNull()?.let { mappingFile ->
-      println(newOutput)
+internal fun Task.addRenameMappingAction(oldOutput: File, newOutput: String) {
+  println(newOutput)
 
-      doLast {
-        val newFile = File(mappingFile.absolutePath.replaceAfterLast("/", newOutput))
-        val success = mappingFile.renameTo(newFile)
-        if (success) {
-          println("Created file://${newFile.absolutePath}")
-        } else {
-          logger.error("Renaming mapping.txt to $newOutput failed.")
-        }
-      }
+  doLast {
+    val newFile = File(oldOutput.absolutePath.replaceAfterLast("/", newOutput))
+    val success = oldOutput.renameTo(newFile)
+    if (success) {
+      println("Created file://${newFile.absolutePath}")
+    } else {
+      logger.error("Renaming mapping.txt to $newOutput failed.")
     }
   }
 }

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "eu.nanogiants"
-version = "2.1.1"
+version = "2.1.2"
 
 repositories {
   google()
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-  implementation("com.android.tools.build:gradle:4.0.0")
+  compileOnly("com.android.tools.build:gradle:4.0.0")
 }
 
 tasks {

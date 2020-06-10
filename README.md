@@ -41,7 +41,7 @@ android {
 The plugin will automatically rename APK, AAB and Mapping.txt files for all assemble and bundle tasks. This will also work if you do not use the versioning extension in the defaultConfig. You can still use the default `archivesBaseName` property.
 
 #### Example:
-Build Variant `productionStoreDebug`
+Build Variant `productionStoreRelease`
 ```groovy
 android {
   defaultConfig {
@@ -51,9 +51,9 @@ android {
 ```
 Artifacts:
 ```
-myAppName-production-store-3.9.0-3272-debug.apk
-myAppName-production-store-3.9.0-3272-debug.aab
-myAppName-production-store-3.9.0-3272-mapping.txt
+myAppName-production-store-3.9.0-3272-release.apk
+myAppName-production-store-3.9.0-3272-release.aab
+myAppName-production-store-3.9.0-3272-release-mapping.txt
 ```
 #### Note:
 Because Android Studio does not know about the AAB renaming, the `locate` or `analyze` links in the event log and notifications will only work for APK files by default. You can set `keepOriginalArtifacts` to keep the original files. The plugin also prints the file URI for renamed artifacts. 

@@ -13,4 +13,5 @@ open class VersioningPluginExtension {
   fun getVersionName(checkBranch: Boolean = false) = Versioning.getVersionName(checkBranch)
 
   var excludeBuildTypes: String? = null
+  var keepOriginalArtifacts: Boolean = false
 }

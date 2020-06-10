@@ -7,7 +7,7 @@ package eu.nanogiants.gradle.ext
 
 import com.android.build.gradle.api.ApplicationVariant
 
-internal fun ApplicationVariant.generateOutputName(baseName: String, extension: String, suffix: String = ""): String {
+internal fun ApplicationVariant.generateOutputName(baseName: String, extension: String): String {
   return StringBuilder().apply {
     append(baseName)
     productFlavors.forEach {
@@ -20,10 +20,6 @@ internal fun ApplicationVariant.generateOutputName(baseName: String, extension: 
     append(versionCode.toString())
     append("-")
     append(buildType.name)
-    if (suffix.isNotEmpty()) {
-      append("-")
-      append(suffix)
-    }
     if (extension == "apk" && !isSigningReady) {
       append("-unsigned")
     } else if (extension == "txt") {

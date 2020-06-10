@@ -4,6 +4,7 @@ plugins {
   kotlin("jvm") version "1.3.72"
   `java-gradle-plugin`
   `maven-publish`
+  id("com.gradle.plugin-publish") version "0.12.0"
 }
 
 group = "eu.nanogiants"
@@ -79,5 +80,22 @@ publishing {
         password = findProperty("bintray_key") as String?
       }
     }
+  }
+}
+
+// publish task: publishPlugins -Pgradle.publish.key=key -Pgradle.publish.secret=secret
+pluginBundle {
+  website = "https://github.com/nanogiants/android-versioning/"
+  vcsUrl = "https://github.com/nanogiants/android-versioning"
+  description = "Gradle plugin to automatically generate Android versionName and versionCode using Git."
+  tags = listOf("versioning", "android", "artifact", "version")
+  (plugins) {
+    "versioningPlugin" {
+      displayName = "Android Versioning Gradle Plugin"
+    }
+  }
+  mavenCoordinates {
+    groupId = "eu.nanogiants"
+    artifactId = "android-versioning"
   }
 }

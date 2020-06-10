@@ -7,6 +7,7 @@ package eu.nanogiants.gradle
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import eu.nanogiants.gradle.ext.addPrintOutputAction
 import eu.nanogiants.gradle.ext.addRenameArtifactAction
 import eu.nanogiants.gradle.ext.addRenameMappingAction
 import eu.nanogiants.gradle.ext.generateOutputName
@@ -24,59 +25,68 @@ class VersioningPlugin : Plugin<Project> {
 
   override fun apply(project: Project) {
     with(project) {
-      val extension = extensions.create("versioning", VersioningPluginExtension::class.java)
+      val ext = extensions.create("versioning", VersioningPluginExtension::class.java)
 
       tasks.register("printVersions") {
         it.group = "Versioning"
         it.description = "Prints the Android version information."
         it.doLast {
-          extension.getVersionName()
-          extension.getVersionCode()
+          ext.getVersionName()
+          ext.getVersionCode()
         }
       }
 
       pluginManager.withPlugin("com.android.application") {
-        val appExtension = extensions.getByType(AppExtension::class.java)
-        val baseName = convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName ?: name
+        val appExt = extensions.getByType(AppExtension::class.java)
 
-        tasks.configureEach { task ->
-          if (task.name.matches(bundleRegex)) {
-            val variantName = task.name.substringAfter("bundle").decapitalize(Locale.ROOT)
+        appExt.applicationVariants.configureEach { variant ->
+          if (!ext.excludeBuildTypes.listContains(variant.buildType.name)) {
+            val baseName = convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName ?: name
+            variant.outputs.configureEach {
+              val newApkName = variant.generateOutputName(baseName, "apk")
+              (it as BaseVariantOutputImpl).outputFileName = newApkName
+            }
+          }
+        }
 
-            appExtension.applicationVariants.configureEach { variant ->
-              if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
-                val bundleName = "$baseName-${variant.baseName}.aab"
-                val newBundleName = variant.generateOutputName(baseName, "aab")
-                val bundleOutputPath = "${buildDir.absolutePath}/outputs/bundle/$variantName/"
+        afterEvaluate {
+          val baseName = convention.findPlugin(BasePluginConvention::class.java)?.archivesBaseName ?: name
+          tasks.configureEach { task ->
+            if (task.name.matches(bundleRegex)) {
+              val variantName = task.name.substringAfter("bundle").decapitalize(Locale.ROOT)
 
-                task.addRenameArtifactAction(bundleName, newBundleName, bundleOutputPath)
+              appExt.applicationVariants.configureEach { variant ->
+                if (variant.name == variantName && !ext.excludeBuildTypes.listContains(variant.buildType.name)) {
+                  val bundleName = "$baseName-${variant.baseName}.aab"
+                  val newBundleName = variant.generateOutputName(baseName, "aab")
+                  val bundleOutputPath = "${buildDir.absolutePath}/outputs/bundle/${variant.name}/"
 
-                if (variant.buildType.isMinifyEnabled) {
-                  variant.mappingFileProvider.orNull?.firstOrNull()?.let {
-                    val newMappingName = variant.generateOutputName(baseName, "txt", "aab")
-                    task.addRenameMappingAction(it, newMappingName)
+                  task.addRenameArtifactAction(bundleName, newBundleName, bundleOutputPath, ext.keepOriginalArtifacts)
+
+                  if (variant.buildType.isMinifyEnabled) {
+                    variant.mappingFileProvider.orNull?.firstOrNull()?.let {
+                      val newMappingName = variant.generateOutputName(baseName, "txt")
+                      task.addRenameMappingAction(it, newMappingName, ext.keepOriginalArtifacts)
+                    }
                   }
                 }
               }
-            }
-          } else if (task.name.matches(assembleRegex)) {
-            val variantName = task.name.substringAfter("assemble").decapitalize(Locale.ROOT)
+            } else if (task.name.matches(assembleRegex)) {
+              val variantName = task.name.substringAfter("assemble").decapitalize(Locale.ROOT)
 
-            appExtension.applicationVariants.configureEach { variant ->
-              if (variant.name == variantName && !extension.excludeBuildTypes.listContains(variant.buildType.name)) {
-                val apkOutputPath = "${buildDir.absolutePath}/outputs/apk/$variantName/"
+              appExt.applicationVariants.configureEach { variant ->
+                if (variant.name == variantName && !ext.excludeBuildTypes.listContains(variant.buildType.name)) {
+                  variant.outputs.configureEach {
+                    val apkName = (it as BaseVariantOutputImpl).outputFileName
+                    val apkOutputPath = "${buildDir.absolutePath}/outputs/apk/$variantName/"
+                    task.addPrintOutputAction(apkOutputPath, apkName)
+                  }
 
-                variant.outputs.configureEach {
-                  val apkName = (it as BaseVariantOutputImpl).outputFileName
-                  val newApkName = variant.generateOutputName(baseName, "apk")
-
-                  task.addRenameArtifactAction(apkName, newApkName, apkOutputPath)
-                }
-
-                if (variant.buildType.isMinifyEnabled) {
-                  variant.mappingFileProvider.orNull?.firstOrNull()?.let {
-                    val newMappingName = variant.generateOutputName(baseName, "txt", "apk")
-                    task.addRenameMappingAction(it, newMappingName)
+                  if (variant.buildType.isMinifyEnabled) {
+                    variant.mappingFileProvider.orNull?.firstOrNull()?.let {
+                      val newMappingName = variant.generateOutputName(baseName, "txt")
+                      task.addRenameMappingAction(it, newMappingName, ext.keepOriginalArtifacts)
+                    }
                   }
                 }
               }

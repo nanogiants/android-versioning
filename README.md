@@ -12,7 +12,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'eu.nanogiants:android-versioning:2.1.2'
+    classpath 'eu.nanogiants:android-versioning:2.2.0'
   }
 }
 ```
@@ -45,24 +45,27 @@ Build Variant `productionStoreDebug`
 ```groovy
 android {
   defaultConfig {
-    archivesBaseName = "MyAppName"
+    archivesBaseName = "myAppName"
   }
 }
 ```
 Artifacts:
 ```
-MyAppName-production-store-3.9.0-3272-debug.apk
-MyAppName-production-store-3.9.0-3272-debug.aab
+myAppName-production-store-3.9.0-3272-debug.apk
+myAppName-production-store-3.9.0-3272-debug.aab
+myAppName-production-store-3.9.0-3272-mapping.txt
 ```
 #### Note:
-Since Android Studio does not know about the artifact renaming, the `locate` or `analyze` links in the event log and notifications will stop working. To compensate that, the plugin prints file URI for every renamed artifact. 
+Because Android Studio does not know about the AAB renaming, the `locate` or `analyze` links in the event log and notifications will only work for APK files by default. You can set `keepOriginalArtifacts` to keep the original files. The plugin also prints the file URI for renamed artifacts. 
 
 #### Optional:
-You can define a comma separated list of buildTypes (e.g. debug) to be excluded from the artifact naming.
+* `excludeBuildTypes`: comma separated list of buildTypes (e.g. debug) to be excluded from the artifact naming
+* `keepOriginalArtifacts`: copy artifact files instead of renaming them
 ```groovy
 // app build.gradle
 versioning {
-  excludeBuildTypes = "debug" {
+  excludeBuildTypes = "debug" // default: null
+  keepOriginalArtifacts = true // default: false
 }
 ```
 

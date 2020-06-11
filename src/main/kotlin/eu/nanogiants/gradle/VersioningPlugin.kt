@@ -10,6 +10,7 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import eu.nanogiants.gradle.ext.addPrintOutputAction
 import eu.nanogiants.gradle.ext.addRenameArtifactAction
 import eu.nanogiants.gradle.ext.addRenameMappingAction
+import eu.nanogiants.gradle.ext.generateAPKPath
 import eu.nanogiants.gradle.ext.generateOutputName
 import eu.nanogiants.gradle.ext.listContains
 import org.gradle.api.Plugin
@@ -78,7 +79,7 @@ class VersioningPlugin : Plugin<Project> {
                 if (variant.name == variantName && !ext.excludeBuildTypes.listContains(variant.buildType.name)) {
                   variant.outputs.configureEach {
                     val apkName = (it as BaseVariantOutputImpl).outputFileName
-                    val apkOutputPath = "${buildDir.absolutePath}/outputs/apk/$variantName/"
+                    val apkOutputPath = variant.generateAPKPath(buildDir)
                     task.addPrintOutputAction(apkOutputPath, apkName)
                   }
 

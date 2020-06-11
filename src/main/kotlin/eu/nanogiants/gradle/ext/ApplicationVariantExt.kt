@@ -31,7 +31,16 @@ internal fun ApplicationVariant.generateOutputName(baseName: String, extension: 
   }.toString()
 }
 
-internal fun ApplicationVariant.generateAPKPath(buildDir: File): String {
+internal fun ApplicationVariant.getBundlePath(buildDir: File): String {
+  return StringBuilder().apply {
+    append(buildDir.absolutePath)
+    append("/outputs/bundle/")
+    append(name)
+    append("/")
+  }.toString()
+}
+
+internal fun ApplicationVariant.getAPKPath(buildDir: File): String {
   return StringBuilder().apply {
     append(buildDir.absolutePath)
     append("/outputs/apk/")

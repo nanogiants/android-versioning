@@ -10,8 +10,9 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import eu.nanogiants.gradle.ext.addPrintOutputAction
 import eu.nanogiants.gradle.ext.addRenameArtifactAction
 import eu.nanogiants.gradle.ext.addRenameMappingAction
-import eu.nanogiants.gradle.ext.generateAPKPath
 import eu.nanogiants.gradle.ext.generateOutputName
+import eu.nanogiants.gradle.ext.getAPKPath
+import eu.nanogiants.gradle.ext.getBundlePath
 import eu.nanogiants.gradle.ext.listContains
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -60,7 +61,7 @@ class VersioningPlugin : Plugin<Project> {
                 if (variant.name == variantName && !ext.excludeBuildTypes.listContains(variant.buildType.name)) {
                   val bundleName = "$baseName-${variant.baseName}.aab"
                   val newBundleName = variant.generateOutputName(baseName, "aab")
-                  val bundleOutputPath = "${buildDir.absolutePath}/outputs/bundle/${variant.name}/"
+                  val bundleOutputPath = variant.getBundlePath(buildDir)
 
                   task.addRenameArtifactAction(bundleName, newBundleName, bundleOutputPath, ext.keepOriginalArtifacts)
 
@@ -79,7 +80,7 @@ class VersioningPlugin : Plugin<Project> {
                 if (variant.name == variantName && !ext.excludeBuildTypes.listContains(variant.buildType.name)) {
                   variant.outputs.configureEach {
                     val apkName = (it as BaseVariantOutputImpl).outputFileName
-                    val apkOutputPath = variant.generateAPKPath(buildDir)
+                    val apkOutputPath = variant.getAPKPath(buildDir)
                     task.addPrintOutputAction(apkOutputPath, apkName)
                   }
 

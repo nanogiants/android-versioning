@@ -6,6 +6,7 @@
 package eu.nanogiants.gradle.ext
 
 import com.android.build.gradle.api.ApplicationVariant
+import java.io.File
 
 internal fun ApplicationVariant.generateOutputName(baseName: String, extension: String): String {
   return StringBuilder().apply {
@@ -27,5 +28,27 @@ internal fun ApplicationVariant.generateOutputName(baseName: String, extension: 
     }
     append(".")
     append(extension)
+  }.toString()
+}
+
+internal fun ApplicationVariant.getBundlePath(buildDir: File): String {
+  return StringBuilder().apply {
+    append(buildDir.absolutePath)
+    append("/outputs/bundle/")
+    append(name)
+    append("/")
+  }.toString()
+}
+
+internal fun ApplicationVariant.getAPKPath(buildDir: File): String {
+  return StringBuilder().apply {
+    append(buildDir.absolutePath)
+    append("/outputs/apk/")
+    if (flavorName.isNotEmpty()) {
+      append(flavorName)
+      append("/")
+    }
+    append(buildType.name)
+    append("/")
   }.toString()
 }

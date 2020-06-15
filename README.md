@@ -12,7 +12,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'de.nanogiants:android-versioning:2.3.0'
+    classpath 'de.nanogiants:android-versioning:2.3.1'
   }
 }
 ```

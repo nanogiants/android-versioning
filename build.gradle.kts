@@ -74,7 +74,7 @@ publishing {
   repositories {
     maven {
       name = "bintray"
-      url = uri("https://api.bintray.com/maven/appcom-interactive/android/${project.name}/;publish=1;")
+      url = uri("https://api.bintray.com/maven/appcom-interactive/android/${project.name}-plugin/;publish=1;")
       credentials {
         username = findProperty("bintray_user") as String?
         password = findProperty("bintray_key") as String?

@@ -3,7 +3,7 @@
  * Copyright © 2020 NanoGiants GmbH. All rights reserved.
  */
 
-package eu.nanogiants.gradle.ext
+package de.nanogiants.gradle.ext
 
 import com.android.build.gradle.api.ApplicationVariant
 import java.io.File

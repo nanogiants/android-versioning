@@ -3,17 +3,17 @@
  * Copyright © 2020 NanoGiants GmbH. All rights reserved.
  */
 
-package eu.nanogiants.gradle
+package de.nanogiants.gradle
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import eu.nanogiants.gradle.ext.addPrintOutputAction
-import eu.nanogiants.gradle.ext.addRenameArtifactAction
-import eu.nanogiants.gradle.ext.addRenameMappingAction
-import eu.nanogiants.gradle.ext.generateOutputName
-import eu.nanogiants.gradle.ext.getAPKPath
-import eu.nanogiants.gradle.ext.getBundlePath
-import eu.nanogiants.gradle.ext.listContains
+import de.nanogiants.gradle.ext.addPrintOutputAction
+import de.nanogiants.gradle.ext.addRenameArtifactAction
+import de.nanogiants.gradle.ext.addRenameMappingAction
+import de.nanogiants.gradle.ext.generateOutputName
+import de.nanogiants.gradle.ext.getAPKPath
+import de.nanogiants.gradle.ext.getBundlePath
+import de.nanogiants.gradle.ext.listContains
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePluginConvention

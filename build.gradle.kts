@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "de.nanogiants"
-version = "2.3.0"
+version = "2.3.1"
 
 repositories {
   google()

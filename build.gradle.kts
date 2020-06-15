@@ -7,8 +7,8 @@ plugins {
   id("com.gradle.plugin-publish") version "0.12.0"
 }
 
-group = "eu.nanogiants"
-version = "2.2.1"
+group = "de.nanogiants"
+version = "2.3.0"
 
 repositories {
   google()
@@ -29,8 +29,8 @@ tasks {
 gradlePlugin {
   plugins {
     create("versioningPlugin") {
-      id = "eu.nanogiants.android-versioning"
-      implementationClass = "eu.nanogiants.gradle.VersioningPlugin"
+      id = "de.nanogiants.android-versioning"
+      implementationClass = "de.nanogiants.gradle.VersioningPlugin"
     }
   }
 }
@@ -95,7 +95,7 @@ pluginBundle {
     }
   }
   mavenCoordinates {
-    groupId = "eu.nanogiants"
+    groupId = "de.nanogiants"
     artifactId = "android-versioning"
   }
 }

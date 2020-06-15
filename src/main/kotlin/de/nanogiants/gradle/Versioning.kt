@@ -3,9 +3,9 @@
  * Copyright © 2020 NanoGiants GmbH. All rights reserved.
  */
 
-package eu.nanogiants.gradle
+package de.nanogiants.gradle
 
-import eu.nanogiants.gradle.ext.runCommand
+import de.nanogiants.gradle.ext.runCommand
 import org.gradle.api.GradleException
 
 object Versioning {

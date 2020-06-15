@@ -3,7 +3,7 @@
  * Copyright © 2020 NanoGiants GmbH. All rights reserved.
  */
 
-package eu.nanogiants.gradle.ext
+package de.nanogiants.gradle.ext
 
 import org.gradle.api.GradleException
 import java.util.Locale

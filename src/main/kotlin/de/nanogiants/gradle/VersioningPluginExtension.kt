@@ -3,7 +3,7 @@
  * Copyright © 2020 NanoGiants GmbH. All rights reserved.
  */
 
-package eu.nanogiants.gradle
+package de.nanogiants.gradle
 
 open class VersioningPluginExtension {
 

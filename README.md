@@ -12,13 +12,13 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'eu.nanogiants:android-versioning:2.2.1'
+    classpath 'de.nanogiants:android-versioning:2.3.0'
   }
 }
 ```
 ```groovy
 // app build.gradle
-apply plugin: 'eu.nanogiants.android-versioning'
+apply plugin: 'de.nanogiants.android-versioning'
 ```
 
 ### Version code and name

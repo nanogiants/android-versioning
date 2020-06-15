@@ -7,10 +7,14 @@ package de.nanogiants.gradle
 
 open class VersioningPluginExtension {
 
-  fun getVersionCode() = Versioning.getVersionCode()
+  private val lazyVersionCode by lazy { Versioning.getVersionCode() }
+  private val lazyVersionName by lazy { Versioning.getVersionName(false) }
+  private val lazyVersionNameCheckBranch by lazy { Versioning.getVersionName(true) }
+
+  fun getVersionCode() = lazyVersionCode
 
   @JvmOverloads
-  fun getVersionName(checkBranch: Boolean = false) = Versioning.getVersionName(checkBranch)
+  fun getVersionName(checkBranch: Boolean = false) = if (checkBranch) lazyVersionNameCheckBranch else lazyVersionName
 
   var excludeBuildTypes: String? = null
   var keepOriginalArtifacts: Boolean = false

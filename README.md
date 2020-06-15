@@ -1,4 +1,4 @@
-# Android Versioning Gradle Plugin [ ![Download](https://api.bintray.com/packages/appcom-interactive/android/android-versioning/images/download.svg) ](https://bintray.com/appcom-interactive/android/android-versioning/_latestVersion)
+# Android Versioning Gradle Plugin [ ![Download](https://api.bintray.com/packages/appcom-interactive/android/android-versioning-plugin/images/download.svg) ](https://bintray.com/appcom-interactive/android/android-versioning-plugin/_latestVersion)
 
 This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your APK/AAB and obfuscation mapping artifacts.
 

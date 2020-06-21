@@ -1,16 +1,48 @@
-# Android Versioning Gradle Plugin [ ![Download](https://api.bintray.com/packages/appcom-interactive/android/android-versioning-plugin/images/download.svg) ](https://bintray.com/appcom-interactive/android/android-versioning-plugin/_latestVersion)
-
+# Android Versioning Gradle Plugin
 This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your APK/AAB and obfuscation mapping artifacts.
 
 ## Usage
+[![gradlePluginPortal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/de/nanogiants/android-versioning/de.nanogiants.android-versioning.gradle.plugin/maven-metadata.xml.svg?label=gradlePluginPortal)](https://plugins.gradle.org/plugin/de.nanogiants.android-versioning) [![jcenter](https://img.shields.io/maven-metadata/v/https/appcom-interactive.bintray.com/android/de/nanogiants/android-versioning/maven-metadata.xml.svg?label=jcenter)](https://bintray.com/appcom-interactive/android/android-versioning-plugin/_latestVersion)
 
-### `buildscript` block:
+The plugin is available from the GradlePluginPortal (preferred) and jcenter.
+### `plugins` block:
+```kotlin
+// app build.gradle.kts
+plugins {
+  id("de.nanogiants.android-versioning") version "2.3.1"
+}
+```
+<details>
+  <summary>Groovy</summary>
+
+```groovy
+// app build.gradle
+plugins {
+  id 'de.nanogiants.android-versioning' version '2.3.1'
+}
+```
+</details>
+
+or via the
+### `buildscript` block (legacy):
+```kotlin
+// top-level build.gradle.kts
+buildscript {
+  dependencies {
+    classpath("de.nanogiants:android-versioning:2.3.1")
+  }
+}
+```
+```kotlin
+// app build.gradle.kts
+apply(plugin = "de.nanogiants.android-versioning")
+```
+<details>
+  <summary>Groovy</summary>
+
 ```groovy
 // top-level build.gradle
 buildscript {
-  repositories {
-    jcenter()
-  }
   dependencies {
     classpath 'de.nanogiants:android-versioning:2.3.1'
   }
@@ -20,6 +52,7 @@ buildscript {
 // app build.gradle
 apply plugin: 'de.nanogiants.android-versioning'
 ```
+</details>
 
 ### Version code and name
 ```groovy
@@ -30,7 +63,7 @@ android {
   }
 }
 ```
-#### Use the plugin by referencing the versioning extension.
+#### Use the plugin by referencing the versioning extension:
 * `versioning.getVersionCode()` returns the current Git commit count
 * `versioning.getVersionName()` returns the latest Git tag
 

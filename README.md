@@ -6,12 +6,17 @@ This plugin automatically generates your Android versionName and versionCode usi
 
 The plugin is available from the GradlePluginPortal (preferred) and jcenter.
 ### `plugins` block:
+<details open>
+  <summary>Kotlin</summary>
+
 ```kotlin
 // app build.gradle.kts
 plugins {
   id("de.nanogiants.android-versioning") version "2.3.1"
 }
 ```
+</details>
+
 <details>
   <summary>Groovy</summary>
 
@@ -25,6 +30,10 @@ plugins {
 
 or via the
 ### `buildscript` block (legacy):
+<details open>
+  <summary>Kotlin</summary>
+
+
 ```kotlin
 // top-level build.gradle.kts
 buildscript {
@@ -37,6 +46,8 @@ buildscript {
 // app build.gradle.kts
 apply(plugin = "de.nanogiants.android-versioning")
 ```
+</details>
+
 <details>
   <summary>Groovy</summary>
 

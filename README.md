@@ -1,6 +1,5 @@
 # Android Versioning Gradle Plugin
-This plugin automatically generates your Android versionName and versionCode using Git. It also appends the version and variant names to your APK/AAB and obfuscation mapping artifacts.
-
+This plugin allows you to automatically generate your Android versionName and versionCode using Git. It also appends the version and variant names to your APK/AAB and obfuscation mapping artifacts.
 ## Usage
 [![gradlePluginPortal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/de/nanogiants/android-versioning/de.nanogiants.android-versioning.gradle.plugin/maven-metadata.xml.svg?label=gradlePluginPortal)](https://plugins.gradle.org/plugin/de.nanogiants.android-versioning) [![jcenter](https://img.shields.io/maven-metadata/v/https/appcom-interactive.bintray.com/android/de/nanogiants/android-versioning/maven-metadata.xml.svg?label=jcenter)](https://bintray.com/appcom-interactive/android/android-versioning-plugin/_latestVersion)
 
@@ -65,7 +64,7 @@ apply plugin: 'de.nanogiants.android-versioning'
 ```
 </details>
 
-### Version code and name
+### Version code and name (optional)
 ```groovy
 android {
   defaultConfig {
@@ -78,7 +77,7 @@ android {
 * `versioning.getVersionCode()` returns the current Git commit count
 * `versioning.getVersionName()` returns the latest Git tag
 
-#### Optional:
+#### Customization:
 * `versioning.getVersionName(checkBranch: Boolean)` if `checkBranch` is set to *true* the plugin will check if the current branch is `release/x.x.x` or `hotfix/x.x.x` and use the branch name instead the latest tag.
 
 ### Artifact naming
@@ -102,7 +101,7 @@ myAppName-production-store-3.9.0-3272-release-mapping.txt
 #### Note:
 Because Android Studio does not know about the AAB renaming, the `locate` or `analyze` links in the event log and notifications will only work for APK files by default. You can set `keepOriginalArtifacts` to keep the original files. The plugin also prints the file URI for renamed artifacts. 
 
-#### Optional:
+#### Customization:
 * `excludeBuildTypes`: comma separated list of buildTypes (e.g. debug) to be excluded from the artifact naming
 * `keepOriginalArtifacts`: copy artifact files instead of renaming them
 ```groovy

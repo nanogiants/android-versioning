@@ -17,5 +17,6 @@ open class VersioningPluginExtension {
   fun getVersionName(checkBranch: Boolean = false) = if (checkBranch) lazyVersionNameCheckBranch else lazyVersionName
 
   var excludeBuildTypes: String? = null
-  var keepOriginalArtifacts: Boolean = false
+  var keepOriginalBundleFile: Boolean = false
+  var keepOriginalMappingFile: Boolean = true
 }

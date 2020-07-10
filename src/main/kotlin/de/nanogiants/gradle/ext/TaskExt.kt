@@ -8,7 +8,7 @@ package de.nanogiants.gradle.ext
 import org.gradle.api.Task
 import java.io.File
 
-internal fun Task.addRenameArtifactAction(
+internal fun Task.addRenameBundleAction(
   oldOutput: String,
   newOutput: String,
   outputPath: String,
@@ -30,7 +30,7 @@ internal fun Task.addRenameArtifactAction(
       }
     } else {
       if (newFile.exists()) {
-        println("Cached output $oldOutput was already renamed. Set 'keepOriginalArtifacts' if you like to keep those files.")
+        println("Cached output $oldOutput was already renamed. Set 'keepOriginalBundleFile' if you like to keep those files.")
       } else {
         logger.error("$oldOutput and $newOutput not found. Try a clean build.")
       }
@@ -54,7 +54,7 @@ internal fun Task.addRenameMappingAction(oldOutput: File, newOutput: String, kee
       }
     } else {
       if (newFile.exists()) {
-        println("Cached output mapping.txt was already renamed. Set 'keepOriginalArtifacts' if you like to keep those files.")
+        println("Cached output mapping.txt was already renamed. Set 'keepOriginalMappingFile' if you like to keep those files.")
       } else {
         logger.error("mapping.txt and $newOutput not found. Try a clean build.")
       }

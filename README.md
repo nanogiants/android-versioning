@@ -11,7 +11,7 @@ The plugin is available from the GradlePluginPortal (preferred) and jcenter.
 ```kotlin
 // app build.gradle.kts
 plugins {
-  id("de.nanogiants.android-versioning") version "2.3.1"
+  id("de.nanogiants.android-versioning") version "2.4.0"
 }
 ```
 </details>
@@ -22,7 +22,7 @@ plugins {
 ```groovy
 // app build.gradle
 plugins {
-  id 'de.nanogiants.android-versioning' version '2.3.1'
+  id 'de.nanogiants.android-versioning' version '2.4.0'
 }
 ```
 </details>
@@ -37,7 +37,7 @@ or via the
 // top-level build.gradle.kts
 buildscript {
   dependencies {
-    classpath("de.nanogiants:android-versioning:2.3.1")
+    classpath("de.nanogiants:android-versioning:2.4.0")
   }
 }
 ```
@@ -54,7 +54,7 @@ apply(plugin = "de.nanogiants.android-versioning")
 // top-level build.gradle
 buildscript {
   dependencies {
-    classpath 'de.nanogiants:android-versioning:2.3.1'
+    classpath 'de.nanogiants:android-versioning:2.4.0'
   }
 }
 ```
@@ -103,12 +103,14 @@ Because Android Studio does not know about the AAB renaming, the `locate` or `an
 
 #### Customization:
 * `excludeBuildTypes`: comma separated list of buildTypes (e.g. debug) to be excluded from the artifact naming
-* `keepOriginalArtifacts`: copy artifact files instead of renaming them
+* `keepOriginalBundleFile`: copy ABB files instead of renaming them  (default *false*)
+* `keepOriginalMappingFile`: copy mapping files instead of renaming them (default *true* to avoid caching issues)
 ```groovy
 // app build.gradle
 versioning {
   excludeBuildTypes = "debug" // default: null
-  keepOriginalArtifacts = true // default: false
+  keepOriginalBundleFile = true // default: false
+  keepOriginalMappingFile = false // default: true
 }
 ```
 

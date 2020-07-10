@@ -8,7 +8,7 @@ package de.nanogiants.gradle
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import de.nanogiants.gradle.ext.addPrintOutputAction
-import de.nanogiants.gradle.ext.addRenameArtifactAction
+import de.nanogiants.gradle.ext.addRenameBundleAction
 import de.nanogiants.gradle.ext.addRenameMappingAction
 import de.nanogiants.gradle.ext.generateOutputName
 import de.nanogiants.gradle.ext.getAPKPath
@@ -63,12 +63,12 @@ class VersioningPlugin : Plugin<Project> {
                   val newBundleName = variant.generateOutputName(baseName, "aab")
                   val bundleOutputPath = variant.getBundlePath(buildDir)
 
-                  task.addRenameArtifactAction(bundleName, newBundleName, bundleOutputPath, ext.keepOriginalArtifacts)
+                  task.addRenameBundleAction(bundleName, newBundleName, bundleOutputPath, ext.keepOriginalBundleFile)
 
                   if (variant.buildType.isMinifyEnabled) {
                     variant.mappingFileProvider.orNull?.firstOrNull()?.let {
                       val newMappingName = variant.generateOutputName(baseName, "txt")
-                      task.addRenameMappingAction(it, newMappingName, ext.keepOriginalArtifacts)
+                      task.addRenameMappingAction(it, newMappingName, ext.keepOriginalMappingFile)
                     }
                   }
                 }
@@ -87,7 +87,7 @@ class VersioningPlugin : Plugin<Project> {
                   if (variant.buildType.isMinifyEnabled) {
                     variant.mappingFileProvider.orNull?.firstOrNull()?.let {
                       val newMappingName = variant.generateOutputName(baseName, "txt")
-                      task.addRenameMappingAction(it, newMappingName, ext.keepOriginalArtifacts)
+                      task.addRenameMappingAction(it, newMappingName, ext.keepOriginalMappingFile)
                     }
                   }
                 }

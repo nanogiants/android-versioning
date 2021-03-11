@@ -1,9 +1,9 @@
 # Android Versioning Gradle Plugin
 This plugin allows you to automatically generate your Android versionName and versionCode using Git. It also appends the version and variant names to your APK/AAB and obfuscation mapping artifacts.
 ## Usage
-[![gradlePluginPortal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/de/nanogiants/android-versioning/de.nanogiants.android-versioning.gradle.plugin/maven-metadata.xml.svg?label=gradlePluginPortal)](https://plugins.gradle.org/plugin/de.nanogiants.android-versioning) [![jcenter](https://img.shields.io/maven-metadata/v/https/appcom-interactive.bintray.com/android/de/nanogiants/android-versioning/maven-metadata.xml.svg?label=jcenter)](https://bintray.com/appcom-interactive/android/android-versioning-plugin/_latestVersion)
+[![gradlePluginPortal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/de/nanogiants/android-versioning/de.nanogiants.android-versioning.gradle.plugin/maven-metadata.xml.svg?label=gradlePluginPortal)](https://plugins.gradle.org/plugin/de.nanogiants.android-versioning)
 
-The plugin is available from the GradlePluginPortal (preferred) and jcenter.
+The plugin is available from the GradlePluginPortal.
 ### `plugins` block:
 <details open>
   <summary>Kotlin</summary>

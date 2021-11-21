@@ -65,6 +65,22 @@ apply plugin: 'de.nanogiants.android-versioning'
 </details>
 
 ### Version code and name (optional)
+<details open>
+  <summary>Kotlin</summary>
+
+```kotlin
+android {
+  defaultConfig {
+    versionCode = versioning.getVersionCode()
+    versionName = versioning.getVersionName()
+  }
+}
+```
+</details>
+
+<details>
+  <summary>Groovy</summary>
+
 ```groovy
 android {
   defaultConfig {
@@ -73,6 +89,8 @@ android {
   }
 }
 ```
+</details>
+
 #### Use the plugin by referencing the versioning extension:
 * `versioning.getVersionCode()` returns the current Git commit count
 * `versioning.getVersionName()` returns the latest Git tag
@@ -85,6 +103,21 @@ The plugin will automatically rename APK, AAB and Mapping.txt files for all asse
 
 #### Example:
 Build Variant `productionStoreRelease`
+<details open>
+  <summary>Kotlin</summary>
+
+```kotlin
+android {
+  defaultConfig {
+    setProperty("archivesBaseName", "myAppName")
+  }
+}
+```
+</details>
+
+<details>
+  <summary>Groovy</summary>
+
 ```groovy
 android {
   defaultConfig {
@@ -92,6 +125,8 @@ android {
   }
 }
 ```
+</details>
+
 Artifacts:
 ```
 myAppName-production-store-3.9.0-3272-release.apk
